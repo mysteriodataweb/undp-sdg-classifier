@@ -165,7 +165,7 @@ cells = [
             "trainer = Trainer(\n",
             "    model=model, args=args,\n",
             "    train_dataset=train, eval_dataset=test,\n",
-            "    data_collator=data_collator, tokenizer=tokenizer,\n",
+            "    data_collator=data_collator, processing_class=tokenizer,\n",
             "    compute_metrics=compute_metrics,\n",
             ")\n",
             "\n",
