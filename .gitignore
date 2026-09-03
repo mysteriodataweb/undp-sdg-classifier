@@ -1,0 +1,25 @@
+# deps
+node_modules/
+.pnp/
+# next
+.next/
+out/
+# env
+.env*.local
+# misc
+.DS_Store
+*.pem
+# python
+__pycache__/
+*.pyc
+backend/.venv/
+*.log
+*.tsbuildinfo
+backend/probe*.py
+# local trained model artifacts
+backend/models/*/
+!backend/models/.gitkeep
+# locally cached dataset (re-downloadable from HF: UNDP/sdgi-corpus)
+backend/data/undp_sdgi/
+backend/data/*.arrow
+backend/data/*.cache

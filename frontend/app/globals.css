@@ -1,0 +1,191 @@
+:root {
+  --bg: #0b1220;
+  --card: #111a2e;
+  --line: #22304f;
+  --text: #e7edf7;
+  --muted: #94a3b8;
+  --accent: #4f8ef7;
+  --accent2: #7c5cf0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.wrap {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+header {
+  margin-bottom: 28px;
+}
+
+header h1 {
+  font-size: 26px;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+header p {
+  color: var(--muted);
+  margin: 0;
+  font-size: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 150px;
+  background: #0d1526;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+button {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+select {
+  background: #0d1526;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 14px;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 8px 2px 0;
+}
+
+.results {
+  margin-top: 20px;
+}
+
+.results h2 {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.bar-row:last-child {
+  border-bottom: none;
+}
+
+.badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.bar-label {
+  flex: 1;
+  font-size: 13px;
+}
+
+.bar-track {
+  width: 40%;
+  height: 8px;
+  background: #0d1526;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+}
+
+.bar-pct {
+  font-size: 12px;
+  color: var(--muted);
+  width: 44px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.error {
+  color: #f87171;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* Official SDG colors, by goal index (1..17) */
+.goal-1  { background: #e5243b; }
+.goal-2  { background: #dda63a; }
+.goal-3  { background: #4c9f38; }
+.goal-4  { background: #c5192d; }
+.goal-5  { background: #ff3a21; }
+.goal-6  { background: #26bde2; }
+.goal-7  { background: #fcc30b; }
+.goal-8  { background: #a21942; }
+.goal-9  { background: #fd6925; }
+.goal-10 { background: #dd1367; }
+.goal-11 { background: #fd9d24; }
+.goal-12 { background: #bf8b2e; }
+.goal-13 { background: #3f7e44; }
+.goal-14 { background: #0a97d9; }
+.goal-15 { background: #56c02b; }
+.goal-16 { background: #00689d; }
+.goal-17 { background: #19486a; }
