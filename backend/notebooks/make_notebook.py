@@ -235,7 +235,47 @@ cells = [
             "print('\\nNext steps:')\n",
             "print('1) Download undp-sdg-xlmr.zip (left panel -> Files -> click the zip).')\n",
             "print('2) Unzip it into backend/models/undp-sdg-xlmr/ (you should get config.json, model.safetensors, tokenizer, sdg_names.json).')\n",
-            "print('3) The FastAPI backend will then load YOUR fine-tuned model automatically.')"
+            "print('3) The FastAPI backend will then load YOUR fine-tuned model automatically.')\n"
+        ]
+    },
+    {
+        "cell_type": "code",
+        "execution_count": None,
+        "metadata": {},
+        "outputs": [],
+        "source": [
+            "# @title 10) Fetch the trained model back to your PC: install gh (GitHub CLI)\n",
+            "!curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg\n",
+            "!sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg\n",
+            "!echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main\" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null\n",
+            "!sudo apt update -y && sudo apt install gh -y"
+        ]
+    },
+    {
+        "cell_type": "code",
+        "execution_count": None,
+        "metadata": {},
+        "outputs": [],
+        "source": [
+            "# @title 11) Authenticate gh with a GitHub token (asked interactively, never saved)\n",
+            "import getpass, os\n",
+            "token = getpass.getpass('GitHub token (classic, scope: repo): ')\n",
+            "os.environ['GH_TOKEN'] = token\n",
+            "!gh auth status"
+        ]
+    },
+    {
+        "cell_type": "code",
+        "execution_count": None,
+        "metadata": {},
+        "outputs": [],
+        "source": [
+            "# @title 12) Upload the trained model zip as a GitHub Release\n",
+            "%cd /content\n",
+            "!gh release create v1.0.0 /content/undp-sdg-xlmr.zip \\\n",
+            "  --repo mysteriodataweb/undp-sdg-classifier \\\n",
+            "  --title \"Fine-tuned xlm-roberta checkpoint\" \\\n",
+            "  --notes \"undp-sdg-xlmr.zip - unzip into backend/models/undp-sdg-xlmr/\""
         ]
     },
 ]
