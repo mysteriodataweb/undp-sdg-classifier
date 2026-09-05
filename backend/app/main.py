@@ -89,11 +89,13 @@ def _respond(clf, preds, lang):
 async def classify(
     mode: str = Form("text"),
     lang: str = Form(DEFAULT_LANG),
-    top_k: int = Form(5),
     text: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None),
 ):
-    """Classify a pasted text (mode=text) or an uploaded document (mode=file)."""
+    """Classify a pasted text (mode=text) or an uploaded document (mode=file).
+
+    Returns all 17 goal scores ranked best-first, each with a confidence tier.
+    """
     clf = get_clf()
 
     if mode == "file":
@@ -112,15 +114,13 @@ async def classify(
             raise HTTPException(status_code=422, detail="Aucun texte extrait du fichier.")
         if len(body) > 10000:
             body = body[:10000]
-        top_k = max(1, min(top_k, 17))
-        preds = clf.predict(body, top_k=top_k)
+        preds = clf.predict_all(body)
         return _respond(clf, preds, lang)
 
     if mode == "text":
         if not text or not text.strip():
             raise HTTPException(status_code=422, detail="Texte vide.")
-        top_k = max(1, min(top_k, 17))
-        preds = clf.predict(text, top_k=top_k)
+        preds = clf.predict_all(text)
         return _respond(clf, preds, lang)
 
     raise HTTPException(status_code=422, detail=f"mode inconnu: {mode!r}")

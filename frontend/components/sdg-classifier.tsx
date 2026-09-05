@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 interface Prediction {
   goal: number;
   probability: number;
+  tier: string;
 }
 
 interface ApiResponse {
@@ -71,6 +72,21 @@ export default function SdgClassifier() {
   const [drag, setDrag] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  function buildSections(
+    all: Prediction[],
+    _names: string[]
+  ): Array<{ title: string; badge: string; items: Prediction[] }> {
+    const high = all.filter((p) => p.tier === "high");
+    const medium = all.filter((p) => p.tier === "medium");
+    const low = all.filter((p) => p.tier === "low");
+    const sections: Array<{ title: string; badge: string; items: Prediction[] }> = [
+      { title: "Fortement lié", badge: "bg-emerald-500/15 text-emerald-400", items: high },
+      { title: "Modérément lié", badge: "bg-amber-500/15 text-amber-400", items: medium },
+      { title: "Faiblement lié", badge: "bg-slate-500/15 text-slate-400", items: low },
+    ];
+    return sections;
+  }
+
   const classify = useCallback(
     async (payload: FormData) => {
       setError("");
@@ -103,7 +119,6 @@ export default function SdgClassifier() {
     fd.append("mode", "text");
     fd.append("text", text);
     fd.append("lang", lang);
-    fd.append("top_k", "5");
     classify(fd);
   };
 
@@ -113,7 +128,6 @@ export default function SdgClassifier() {
     fd.append("mode", "file");
     fd.append("file", file);
     fd.append("lang", lang);
-    fd.append("top_k", "5");
     classify(fd);
   };
 
@@ -289,35 +303,53 @@ export default function SdgClassifier() {
         {preds.length > 0 && (
           <Card className="animate-fade-up">
             <CardHeader>
-              <CardDescription>Objectifs détectés</CardDescription>
+              <CardDescription>Alerté·e sur les 17 ODD, classés par pertinence</CardDescription>
               <CardTitle>Résultats</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {preds.map((p) => {
-                const name = labels[p.goal - 1] ?? `SDG ${p.goal}`;
-                const pct = Math.round(p.probability * 100);
-                return (
-                  <div key={p.goal} className="flex items-center gap-3">
-                    <span
-                      className={`sdg-${p.goal} flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white`}
-                    >
-                      {p.goal}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="truncate text-sm text-[#eef2fb]">{name}</span>
-                        <span className="ml-3 text-xs tabular-nums text-[#93a0b4]">{pct}%</span>
-                      </div>
-                      <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-[#16203a]">
-                        <div
-                          className={`sdg-${p.goal} h-full rounded-full transition-all duration-700`}
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
+            <CardContent className="space-y-4">
+              {buildSections(preds, labels.map((n, i) => n))
+                .filter((s) => s.items.length > 0)
+                .map((section) => (
+                  <div key={section.title}>
+                    <div className="mb-2 flex items-center gap-2">
+                      <span
+                        className={[
+                          "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                          section.badge,
+                        ].join(" ")}
+                      >
+                        {section.title}
+                      </span>
+                    </div>
+                    <div className="space-y-2.5">
+                      {section.items.map((p) => {
+                        const name = labels[p.goal - 1] ?? `SDG ${p.goal}`;
+                        const pct = Math.round(p.probability * 100);
+                        return (
+                          <div key={p.goal} className="flex items-center gap-3">
+                            <span
+                              className={`sdg-${p.goal} flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-sm font-bold text-white`}
+                            >
+                              {p.goal}
+                            </span>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-center justify-between">
+                                <span className="truncate text-sm text-[#eef2fb]">{name}</span>
+                                <span className="ml-3 text-xs tabular-nums text-[#93a0b4]">{pct}%</span>
+                              </div>
+                              <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-[#16203a]">
+                                <div
+                                  className={`sdg-${p.goal} h-full rounded-full transition-all duration-700 opacity-80`}
+                                  style={{ width: `${pct}%` }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-                );
-              })}
+                ))}
               <p className="pt-1 text-[11px] italic text-[#5c6a83]">{model}</p>
             </CardContent>
           </Card>

@@ -41,6 +41,7 @@ class SDGClassifier:
         return model, tokenizer
 
     def predict(self, text: str, top_k: int = 5):
+        """Return top_k predictions, always at least one, above threshold."""
         inputs = self.tokenizer(
             text, return_tensors="pt", truncation=True, max_length=256, padding=True
         )
@@ -55,6 +56,28 @@ class SDGClassifier:
             p = float(probs[i])
             if p >= self.threshold or len(result) == 0:
                 result.append({"goal": int(i) + 1, "probability": round(p, 4)})
+        return result
+
+    def predict_all(self, text: str):
+        """Return all 17 scores sorted by probability (best first) with tier."""
+        inputs = self.tokenizer(
+            text, return_tensors="pt", truncation=True, max_length=256, padding=True
+        )
+        inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
+        with torch.no_grad():
+            logits = self.model(**inputs).logits[0]
+        probs = torch.sigmoid(logits).cpu().numpy()
+
+        ranked = sorted(enumerate(probs), key=lambda x: -x[1])
+        result = []
+        for i, p in ranked:
+            pf = round(float(p), 4)
+            tier = "high" if pf >= 0.40 else ("medium" if pf >= 0.20 else "low")
+            result.append({
+                "goal": int(i) + 1,
+                "probability": pf,
+                "tier": tier,
+            })
         return result
 
     def predict_full(self, text: str, threshold: float | None = None):
