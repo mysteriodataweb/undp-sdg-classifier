@@ -23,3 +23,5 @@ backend/models/*/
 backend/data/undp_sdgi/
 backend/data/*.arrow
 backend/data/*.cache
+# local analytics history (SQLite, recreated on the fly)
+backend/data/*.db
